@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will You Be My Valentine? 💖</title>
+    <title>Will You Be My Valentine? 💖✨</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -16,130 +19,140 @@
             align-items: center;
             overflow: hidden;
             position: relative;
-        }
-        h1 {
-            font-size: 3rem;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 2rem;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .buttons {
-            display: flex;
-            gap: 2rem;
-        }
-        button {
-            padding: 1rem 2rem;
-            font-size: 1.5rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        #yes { 
-            background: #ff6b9d; 
-            color: white;
-            transform: scale(1);
-        }
-        #no { 
-            background: #ff8e8e; 
             color: white;
         }
-        #yes:hover { transform: scale(1.1); }
-        #no:hover { transform: translateX(20px); }
-        .celebration {
-            display: none;
-            text-align: center;
-            font-size: 2rem;
-            color: #ff4757;
-            animation: bounce 1s infinite;
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-        .hearts {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .heart {
-            position: absolute;
-            color: #ff69b4;
-            font-size: 2rem;
-            animation: float 6s infinite linear;
-        }
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-        @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            .buttons { flex-direction: column; gap: 1rem; }
-        }
+        h1 { font-size: 3rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 1rem; animation: glow 2s ease-in-out infinite alternate; }
+        @keyframes glow { from { text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6; } to { text-shadow: 0 0 10px #fff, 0 0 20px #ff4da6, 0 0 30px #ff4da6; } }
+        .section { text-align: center; max-width: 500px; }
+        .quiz { display: block; }
+        .question { font-size: 1.5rem; margin: 1rem 0; }
+        .quiz-options { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+        .quiz-options button { padding: 1rem; background: rgba(255,255,255,0.2); color: white; border: 2px solid white; border-radius: 20px; cursor: pointer; transition: all 0.3s; }
+        .quiz-options button:hover { background: white; color: #e73c7e; transform: scale(1.05); }
+        .buttons { display: flex; gap: 2rem; }
+        button { padding: 1.5rem 3rem; font-size: 1.8rem; border: none; border-radius: 50px; cursor: pointer; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        #yes { background: linear-gradient(45deg, #ff6b9d, #ff8e8e); color: white; }
+        #no { background: linear-gradient(45deg, #ff4757, #ff6b9d); color: white; position: relative; }
+        #yes:hover { transform: scale(1.15) rotate(5deg); box-shadow: 0 20px 40px rgba(255,107,157,0.5); }
+        #no:hover { transform: translate(calc(50vw * (0.1 + var(--mouse-x))), calc(50vh * (0.1 + var(--mouse-y)))) !important; }
+        .celebration, .quiz-end { display: none; font-size: 2rem; animation: bounce 1s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .music-toggle { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.3); border: none; padding: 10px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; }
+        @media (max-width: 768px) { h1 { font-size: 2rem; } .buttons { flex-direction: column; gap: 1.5rem; } }
+        .hearts { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+        .heart { position: absolute; font-size: 2rem; animation: float 8s infinite linear; }
+        @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100px) rotate(360deg); opacity: 0; } }
     </style>
 </head>
 <body>
+    <button class="music-toggle" id="musicToggle" title="Toggle Music">🎵</button>
+    <audio id="bgMusic" loop>
+        <source src="audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoAAAAA" type="audio/wav">
+    </audio>
     <div class="hearts" id="hearts"></div>
-    <h1>Will you be my Valentine? 💕</h1>
-    <div class="buttons">
-        <button id="yes">Yes 💖</button>
-        <button id="no">No 😢</button>
+
+    <div class="section" id="quizSection">
+        <h1>💕 Quick Love Quiz 💕</h1>
+        <div class="quiz">
+            <div class="question">What's my favorite thing about you?</div>
+            <div class="quiz-options">
+                <button onclick="quizAnswer(0)">Your smile 😊</button>
+                <button onclick="quizAnswer(0)">Your laugh 😂</button>
+                <button onclick="quizAnswer(1)">Everything ❤️</button>
+            </div>
+        </div>
     </div>
-    <div class="celebration" id="celebration">
-        Yay! I knew it! Let's celebrate together! 🎉❤️<br>
-        Meet me soon? 😘
+
+    <div class="section" id="mainSection" style="display: none;">
+        <h1>Will you be my Valentine? 🌹</h1>
+        <div class="buttons">
+            <button id="yes">Yes! 💖✨</button>
+            <button id="no">No way! 😜</button>
+        </div>
+    </div>
+
+    <div class="section celebration" id="celebration">
+        YAY! You're my Valentine forever! 🎉💒❤️<br>
+        Can't wait to see you! 😍
     </div>
 
     <script>
-        const noBtn = document.getElementById('no');
-        const yesBtn = document.getElementById('yes');
-        const celebration = document.getElementById('celebration');
-        const buttons = document.querySelector('.buttons');
+        const music = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
         const heartsContainer = document.getElementById('hearts');
+        let musicPlaying = false;
+        let quizScore = 0;
+        const noMessages = ['Really? 😏', 'Try again! 💕', 'You know the answer 😉', 'Click Yes already! ❤️', 'Last chance! 🌹'];
 
-        // Create floating hearts
+        musicToggle.addEventListener('click', () => {
+            if (musicPlaying) {
+                music.pause();
+                musicToggle.textContent = '🎵';
+            } else {
+                music.play().catch(() => {}); // Graceful fallback
+                musicToggle.textContent = '🔇';
+            }
+            musicPlaying = !musicPlaying;
+        });
+
+        // Floating hearts
         function createHeart() {
             const heart = document.createElement('div');
             heart.className = 'heart';
-            heart.innerHTML = '💖';
+            heart.textContent = ['💖', '💕', '💗', '💝'][Math.floor(Math.random() * 4)];
             heart.style.left = Math.random() * 100 + '%';
-            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
             heartsContainer.appendChild(heart);
-            setTimeout(() => heart.remove(), 6000);
+            setTimeout(() => heart.remove(), 10000);
         }
-        setInterval(createHeart, 300);
+        setInterval(createHeart, 500);
 
-        // No button fun messages
-        const noMessages = ['Are you sure? 😏', 'Think again! 💕', "Don't be shy! 😉", 'Yes you do! ❤️'];
-        let noClickCount = 0;
+        // Quiz logic
+        function quizAnswer(correct) {
+            if (correct) quizScore++;
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('mainSection').style.display = 'block';
+            if (musicPlaying) music.play();
+        }
 
+        // No button
+        const noBtn = document.getElementById('no');
+        let noCount = 0;
+        noBtn.addEventListener('mouseover', (e) => {
+            const rect = noBtn.getBoundingClientRect();
+            noBtn.style.setProperty('--mouse-x', (e.clientX - rect.left) / rect.width);
+            noBtn.style.setProperty('--mouse-y', (e.clientY - rect.top) / rect.height);
+            noBtn.style.transform = `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px) rotate(${Math.random() * 20 - 10}deg)`;
+        });
         noBtn.addEventListener('click', () => {
-            noClickCount++;
-            noBtn.textContent = noMessages[noClickCount % noMessages.length];
-            yesBtn.style.transform = `scale(${1 + noClickCount * 0.2})`;
-            yesBtn.style.fontSize = `${1.5 + noClickCount * 0.1}rem`;
+            noCount++;
+            noBtn.textContent = noMessages[noCount % noMessages.length];
+            document.getElementById('yes').style.transform = `scale(${1.2 + noCount * 0.1})`;
         });
 
-        noBtn.addEventListener('mouseover', () => {
-            noBtn.style.transform = `translateX(${Math.random() * 50 + 20}px)`;
-        });
-
-        yesBtn.addEventListener('click', () => {
-            buttons.style.display = 'none';
-            celebration.style.display = 'block';
-            // Extra hearts on yes
-            for (let i = 0; i < 20; i++) {
-                setTimeout(createHeart, i * 100);
+        // Yes button with confetti fireworks
+        document.getElementById('yes').addEventListener('click', () => {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.getElementById('celebration').style.display = 'block';
+            
+            // Multi-burst heart confetti
+            const count = 200;
+            const defaults = { origin: { y: 0.7 } };
+            for (let i = 0; i < count; i++) {
+                confetti(Object.assign({}, defaults, {
+                    scalar: 1.2,
+                    spread: 360,
+                    startVelocity: 40,
+                    shapes: ['heart'],
+                    colors: ['#ff69b4', '#ff1493', '#ffc0cb']
+                }));
             }
+            if (musicPlaying) music.volume = 0.7;
         });
     </script>
 </body>
